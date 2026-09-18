@@ -7,7 +7,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Workspace />} />
+        <Route path="/" element={<Login />} />
         <Route path="/workspace" element={<Workspace />} />
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<Navigate to="/" replace />} />
