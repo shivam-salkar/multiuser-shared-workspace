@@ -1,5 +1,9 @@
 import "./App.css";
 import { Editor } from "@monaco-editor/react";
+import { MonacoBinding } from "y-monaco";
+import { useRef, useMemo } from "react";
+import * as Y from "yjs";
+import { SocketIOProvider } from "y-socket.io"
 
 const editorOptions = {
   fontFamily: "'JetBrains Mono', Fira Code, monospace",
@@ -15,6 +19,24 @@ const editorOptions = {
 
 
 function App() {
+
+  const editorRef = useRef(null);
+
+  const ydoc = useMemo(() => new Y.Doc(), []);
+  const yText = useMemo(() => ydoc.getText("monaco"), [ydoc]);
+  
+  
+  const handleMount = (editor) => {
+    editorRef.current = editor;
+
+    const provider = new SocketIOProvider("http://localhost:3000", "monaco", ydoc, { autoConnect: true });
+    const binding = new MonacoBinding(
+      yText,
+      editor.getModel(),
+      new Set([editor]),
+      provider.awareness
+    );
+  };
 
   return (
     <>
@@ -42,9 +64,8 @@ function App() {
               options={editorOptions}
               theme="vs-dark"
               defaultValue=""
-            >
-
-            </Editor>
+              onMount={handleMount}
+            />
           </section>
         </div>
       </main>
