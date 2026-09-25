@@ -1,7 +1,9 @@
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { YSocketIO } from "y-socket.io/dist/server"; 
+import { YSocketIO } from "y-socket.io/dist/server";
+import { redis } from "./db/redis.js";
+import db from "./db/sqlite.js";
 
 const app = express();
 const httpServer = createServer(app);
