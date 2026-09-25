@@ -4,8 +4,16 @@ import { Server } from "socket.io";
 import { YSocketIO } from "y-socket.io/dist/server";
 import { redis } from "./db/redis.js";
 import db from "./db/sqlite.js";
+import cors from "cors";
+import userRoutes from "./routes/user.routes.js";
+
 
 const app = express();
+app.use(cors({ origin: "http://localhost:5173" }));
+app.use(express.json());
+app.use("/api/users", userRoutes);
+
+
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {

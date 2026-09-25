@@ -5,12 +5,26 @@ export default function Login() {
   const [userName, setUserName] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!userName.trim()) return;
 
-    // Navigate to workspace and optionally pass userName in router state
-    navigate("/workspace", { state: { userName: userName.trim() } });
+    try {
+      const res = await fetch("http://localhost:3000/api/users/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({name: userName.trim()}),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        // Save SQLite user in localStorage
+        localStorage.setItem("user", JSON.stringify(data.user));
+        navigate("/workspace", { state: { user: data.user } });
+      }
+    } catch(e){
+      console.log(e);
+    }
   };
 
   return (
